@@ -23,13 +23,8 @@
 
 ## Info
     
-This is a header-only library for utility functions and data structures. 
-- Strings  
-- Dynamic arrays inspired by the Vector type of Rust.  
-- Hashmaps  
+This library was built to contain most of the common utilities I need for building programs in C. I have chosen not to constrain the library to any specific function or theme - my goal is instead to have a single header file filled with everything I need, that I can copy into my projects as an easy default. Analib is a highly opinionated and personal library catered only to myself, and myself only.
   
-Inspired by [sv.h](https://github.com/tsoding/sv/).  
-   
 ---
 <div id="usage"></div>
 
