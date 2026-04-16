@@ -3,7 +3,7 @@
 </p>
   
 <p align="center">
-  <em>Header-only C library</em>
+  <em>Opinionated header-only C library</em>
 </p>
   
 <p align="center">
