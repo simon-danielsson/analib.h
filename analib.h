@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.2.1
+Version     : 0.2.2
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -108,9 +108,6 @@ ANALIB_DEF int AL_str_len(char *s);
 #define _al_assert_clr "\033[31m"
 #define _al_todo_clr "\033[33m"
 
-#ifdef AL_ASSERT_OFF
-#define AL_db_assert(cond, do_abort) ((void)0)
-#else
 // formatted assert message
 // prints to stderr regardless of condition
 // does not abort on do_abort=true if condition was true
@@ -132,11 +129,7 @@ ANALIB_DEF int AL_str_len(char *s);
       abort();                                                                 \
     }                                                                          \
   } while (0)
-#endif // AL_ASSERT_OFF
 
-#ifdef AL_LOG_OFF
-#define AL_db_log(fmt, ...) ((void)0)
-#else
 // formatted log message
 #define AL_log(fmt, ...)                                                       \
   do {                                                                         \
@@ -150,11 +143,6 @@ ANALIB_DEF int AL_str_len(char *s);
                               .msg = msg});                                    \
   } while (0)
 
-#endif // AL_LOG_OFF
-
-#ifdef AL_TODO_OFF
-#define AL_db_todo(fmt, ...) ((void)0)
-#else
 // rust-like formatted todo message that aborts the program if reached
 
 #define AL_todo(fmt, ...)                                                      \
@@ -169,7 +157,6 @@ ANALIB_DEF int AL_str_len(char *s);
                               .msg = msg});                                    \
     abort();                                                                   \
   } while (0)
-#endif // AL_LOG_OFF
 
 // compare two integers or doubles and return the smaller one
 #define AL_cmp_min(a, b)                                                       \

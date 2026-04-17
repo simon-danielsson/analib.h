@@ -1,7 +1,3 @@
-#include <stdio.h>
-// #define AL_LOG_OFF
-// #define AL_ASSERT_OFF
-// #define AL_TODO_OFF
 #define ANALIB_IMPLEMENTATION
 #include "../analib.h"
 
@@ -22,10 +18,10 @@ void test3(void) {
 
 int main(void) {
 
-    // AL_db_log("Initiating tests...");
-    // test1();
-    // test2();
-    // test3();
+    AL_log("Initiating tests...");
+    test1();
+    test2();
+    test3();
     AL_log("Finished with tests!");
     int tests_left_to_add = 3;
     AL_todo("add %d more tests", tests_left_to_add);
