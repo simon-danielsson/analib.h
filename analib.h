@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.1.4
+Version     : 0.1.5
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -49,8 +49,7 @@ SOFTWARE.
 // =============================================================================
 
 // generic label builder for debug functions
-static inline void AL__intern_db_genlbl(const char *label, char *header,
-                                        int header_size) {
+static inline void al_db_lbl(const char *label, char *header, int header_size) {
   int label_size = strlen(label);
   int wings_len = (header_size - label_size);
 
@@ -68,27 +67,27 @@ static inline void AL__intern_db_genlbl(const char *label, char *header,
 }
 
 // generic msg call for debug functions
-static inline void AL__intern_db_genmsg(const char *type, const char *msg,
-                                        const char *file, int line,
-                                        const char *function) {
+static inline void _al_db_msg(const char *type, const char *msg,
+                              const char *file, int line,
+                              const char *function) {
 
   char label[9];
-  AL__intern_db_genlbl(type, label, 9);
+  al_db_lbl(type, label, 9);
 
   char space[11 + 1];
   memset(space, ' ', 11);
   space[11] = '\0';
 
-  fprintf(stderr, "\n->%s  %s:%d (%s)\n%s %s\n", label, file, line, function,
-          space, msg);
+  fprintf(stderr, "%-8s%s:%d (%s)%-2s%-32s\n", type, file, line, function, " ",
+          msg);
 }
 
-static inline int AL__intern_min_int(int a, int b) { return a < b ? a : b; }
-static inline int AL__intern_max_int(int a, int b) { return a > b ? a : b; }
-static inline double AL__intern_min_double(double a, double b) {
+static inline int _al_min_int(int a, int b) { return a < b ? a : b; }
+static inline int _al_max_int(int a, int b) { return a > b ? a : b; }
+static inline double _al_min_double(double a, double b) {
   return a < b ? a : b;
 }
-static inline double AL__intern_max_double(double a, double b) {
+static inline double _al_max_double(double a, double b) {
   return a > b ? a : b;
 }
 
@@ -98,33 +97,49 @@ static inline double AL__intern_max_double(double a, double b) {
 // get length of str
 ANALIB_DEF int AL_str_len(char *s);
 
-// formatted assert message that does not abort the program
-#define AL_db_assert(cond)                                                     \
-  if (cond == false) {                                                         \
-    AL__intern_db_genmsg("ASSERT", #cond, __FILE_NAME__, __LINE__, __func__);  \
-  }                                                                            \
-  while (0)
+#ifdef AL_DEBUG_OFF
+#define AL_db_assert(cond, do_abort) ((void)0)
+#define AL_db_log(msg) ((void)0)
+#define AL_db_todo(msg) ((void)0)
+
+#else
+// formatted assert message
+// prints to stderr regardless of condition
+// does not abort on do_abort=true if condition was true
+#define AL_db_assert(cond, do_abort)                                           \
+  do {                                                                         \
+    char msg[32];                                                              \
+    if (!(cond)) {                                                             \
+      snprintf(msg, sizeof(msg), "failure -> %s", #cond);                      \
+    } else {                                                                   \
+      snprintf(msg, sizeof(msg), "success -> %s", #cond);                      \
+    }                                                                          \
+    _al_db_msg("ASSERT", msg, __FILE_NAME__, __LINE__, __func__);              \
+    if (!(cond) && (do_abort)) {                                               \
+      abort();                                                                 \
+    }                                                                          \
+  } while (0)
 
 // formatted log message
 #define AL_db_log(msg)                                                         \
-  AL__intern_db_genmsg("LOG", msg, __FILE_NAME__, __LINE__, __func__);
+  _al_db_msg("LOG", msg, __FILE_NAME__, __LINE__, __func__);
 
-// rust-like formatted todo message that aborts the program
+// rust-like formatted todo message that aborts the program if reached
 #define AL_db_todo(msg)                                                        \
   do {                                                                         \
-    AL__intern_db_genmsg("TODO", (msg), __FILE_NAME__, __LINE__, __func__);    \
+    _al_db_msg("TODO", (msg), __FILE_NAME__, __LINE__, __func__);              \
     abort();                                                                   \
   } while (0)
 
+#endif // AL_DEBUG_OFF
+
 // compare two integers or doubles and return the smaller one
 #define AL_cmp_min(a, b)                                                       \
-  _Generic((a) + (b), int: AL__intern_min_int, double: AL__intern_min_double)( \
-      a, b)
+  _Generic((a) + (b), int: _al_min_int, double: _al_min_double)(a, b)
 
 // compare two integers or doubles and return the bigger one
 #define AL_cmp_max(a, b)                                                       \
-  _Generic((a) + (b), int: AL__intern_max_int, double: AL__intern_max_double)( \
-      a, b)
+  _Generic((a) + (b), int: _al_max_int, double: _al_max_double)(a, b)
 
 #endif // ANALIB_H_
 

@@ -41,6 +41,14 @@ Copy [analib.h](./analib.h) into your project and include it like this:
 #include "./analib.h"
 ```
   
+You can de-activate all AL_db… functions using a definition before the include - useful if you want to bypass all debug logs, asserts and todos at once:
+
+```c
+#define AL_DEBUG_OFF
+#define ANALIB_IMPLEMENTATION
+#include "./analib.h"
+```
+  
 ---
 <div id="license"></div>
 
