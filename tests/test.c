@@ -17,7 +17,7 @@ int main(void) {
     printf("%.2f\n", AL_cmp_max(5.2, 6.8));
     printf("%.2f\n", AL_cmp_max(5.2, 6.8));
 
-    AL_db_assert(5 == 5, true);
+    AL_db_assert(5 == 5, false);
     AL_db_assert(2 == 5, false);
 
     AL_db_log("This is something I want to log");

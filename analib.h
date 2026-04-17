@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.1.6
+Version     : 0.1.7
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -47,6 +47,16 @@ SOFTWARE.
 // INTERNAL DEFINITIONS
 // =============================================================================
 
+typedef struct {
+  char *msg_col;
+  char *rst_col;
+  int line;
+  const char *function;
+  const char *file;
+  char *type;
+  const char *msg;
+} _al_db_type;
+
 // generic label builder for debug functions
 static inline void al_db_lbl(const char *label, char *header, int header_size) {
   int label_size = strlen(label);
@@ -66,19 +76,16 @@ static inline void al_db_lbl(const char *label, char *header, int header_size) {
 }
 
 // generic msg call for debug functions
-static inline void _al_db_msg(const char *type, const char *msg,
-                              const char *file, int line,
-                              const char *function) {
-
+static inline void _al_db_msg(_al_db_type *t) {
   char label[9];
-  al_db_lbl(type, label, 9);
+  al_db_lbl(t->type, label, 9);
 
   char space[11 + 1];
   memset(space, ' ', 11);
   space[11] = '\0';
 
-  fprintf(stderr, "%-8s%s:%d (%s)%-2s%-32s\n", type, file, line, function, " ",
-          msg);
+  fprintf(stderr, "%s%-8s%s%s:%d (%s)%-2s%-32s\n", t->msg_col, t->type,
+          t->rst_col, t->file, t->line, t->function, " ", t->msg);
 }
 
 static inline int _al_min_int(int a, int b) { return a < b ? a : b; }
@@ -96,6 +103,11 @@ static inline double _al_max_double(double a, double b) {
 // get length of str
 ANALIB_DEF int AL_str_len(char *s);
 
+#define _al_log_clr "\033[34m"
+#define _al_assert_clr "\033[31m"
+#define _al_todo_clr "\033[33m"
+#define _al_reset_clr "\033[0m"
+
 #ifdef AL_ASSERT_OFF
 #define AL_db_assert(cond, do_abort) ((void)0)
 #else
@@ -110,7 +122,13 @@ ANALIB_DEF int AL_str_len(char *s);
     } else {                                                                   \
       snprintf(msg, sizeof(msg), "success -> %s", #cond);                      \
     }                                                                          \
-    _al_db_msg("ASSERT", msg, __FILE_NAME__, __LINE__, __func__);              \
+    _al_db_msg(&(_al_db_type){.msg_col = _al_assert_clr,                       \
+                              .rst_col = _al_reset_clr,                        \
+                              .line = __LINE__,                                \
+                              .function = __func__,                            \
+                              .file = __FILE_NAME__,                           \
+                              .type = "ASSERT",                                \
+                              .msg = msg});                                    \
     if (!(cond) && (do_abort)) {                                               \
       abort();                                                                 \
     }                                                                          \
@@ -121,17 +139,30 @@ ANALIB_DEF int AL_str_len(char *s);
 #define AL_db_log(msg) ((void)0)
 #else
 // formatted log message
-#define AL_db_log(msg)                                                         \
-  _al_db_msg("LOG", msg, __FILE_NAME__, __LINE__, __func__);
+#define AL_db_log(message)                                                     \
+  _al_db_msg(&(_al_db_type){.msg_col = _al_log_clr,                            \
+                            .rst_col = _al_reset_clr,                          \
+                            .line = __LINE__,                                  \
+                            .function = __func__,                              \
+                            .file = __FILE_NAME__,                             \
+                            .type = "LOG",                                     \
+                            .msg = (message)});
+
 #endif // AL_LOG_OFF
 
 #ifdef AL_TODO_OFF
 #define AL_db_todo(msg) ((void)0)
 #else
 // rust-like formatted todo message that aborts the program if reached
-#define AL_db_todo(msg)                                                        \
+#define AL_db_todo(message)                                                    \
   do {                                                                         \
-    _al_db_msg("TODO", (msg), __FILE_NAME__, __LINE__, __func__);              \
+    _al_db_msg(&(_al_db_type){.msg_col = _al_todo_clr,                         \
+                              .rst_col = _al_reset_clr,                        \
+                              .line = __LINE__,                                \
+                              .function = __func__,                            \
+                              .file = __FILE_NAME__,                           \
+                              .type = "TODO",                                  \
+                              .msg = (message)});                              \
     abort();                                                                   \
   } while (0)
 #endif // AL_LOG_OFF
