@@ -3,7 +3,7 @@
 </p>
   
 <p align="center">
-  <em>Opinionated header-only C library</em>
+  <em>Opinionated header-only C library for common utilities.</em>
 </p>
   
 <p align="center">
@@ -26,7 +26,7 @@
 This library is built to house some of the most common utilities I make use of when building programs in C - I have chosen not to constrain the library to any specific utility or theme. 
   
 > [!IMPORTANT]  
-> Analib is a criminally opinionated library built to cater only to myself, and myself only. If you are not me, there is a good chance you will not enjoy using this library.
+> Analib is a criminally opinionated library catered only to myself, and myself only. If you are not me, there is a good chance you will not enjoy using this library.
   
 Inspiration has been taken from the following projects:  
 - [sv.h](https://github.com/tsoding/sv)  
