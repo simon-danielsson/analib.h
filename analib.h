@@ -6,7 +6,7 @@ Version     : 0.1.5
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
-Repository  : https://github.com/simon-danielsson/analib-c
+Repository  : https://github.com/simon-danielsson/analib.h
 Website     : https://www.simondanielsson.se/
 
 ------------ MIT License ------------
