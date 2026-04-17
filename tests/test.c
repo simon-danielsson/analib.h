@@ -1,5 +1,7 @@
 #include <stdio.h>
-// #define AL_DEBUG_OFF
+// #define AL_LOG_OFF
+// #define AL_ASSERT_OFF
+// #define AL_TODO_OFF
 #define ANALIB_IMPLEMENTATION
 #include "../analib.h"
 

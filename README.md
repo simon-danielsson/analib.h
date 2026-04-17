@@ -26,7 +26,7 @@
 This library is built to house some of the most common utilities I make use of when building programs in C - I have chosen not to constrain the library to any specific utility or theme. 
   
 > [!IMPORTANT]  
-> Analib is a criminally opinionated library catered only to myself, and myself only. If you are not me, there is a good chance you will not enjoy using this library.
+> Analib is a criminally opinionated library catering only to myself, and myself only. If you are not me, there is a good chance you will not enjoy using this library.
   
 Inspiration has been taken from the following projects:  
 - [sv.h](https://github.com/tsoding/sv)  
@@ -44,10 +44,12 @@ Copy [analib.h](./analib.h) into your project and include it like this:
 #include "./analib.h"
 ```
   
-You can de-activate all AL_db… functions using a definition before the include - useful if you want to bypass all debug logs, asserts and todos at once:
+You can de-activate "AL_db…"-type functions using definitions before the include - useful if you want to bypass debug logs, asserts and/or todos:
 
 ```c
-#define AL_DEBUG_OFF
+#define AL_LOG_OFF
+#define AL_ASSERT_OFF
+#define AL_TODO_OFF
 #define ANALIB_IMPLEMENTATION
 #include "./analib.h"
 ```

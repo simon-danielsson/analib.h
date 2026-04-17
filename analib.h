@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.1.5
+Version     : 0.1.6
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -96,11 +96,8 @@ static inline double _al_max_double(double a, double b) {
 // get length of str
 ANALIB_DEF int AL_str_len(char *s);
 
-#ifdef AL_DEBUG_OFF
+#ifdef AL_ASSERT_OFF
 #define AL_db_assert(cond, do_abort) ((void)0)
-#define AL_db_log(msg) ((void)0)
-#define AL_db_todo(msg) ((void)0)
-
 #else
 // formatted assert message
 // prints to stderr regardless of condition
@@ -118,19 +115,26 @@ ANALIB_DEF int AL_str_len(char *s);
       abort();                                                                 \
     }                                                                          \
   } while (0)
+#endif // AL_ASSERT_OFF
 
+#ifdef AL_LOG_OFF
+#define AL_db_log(msg) ((void)0)
+#else
 // formatted log message
 #define AL_db_log(msg)                                                         \
   _al_db_msg("LOG", msg, __FILE_NAME__, __LINE__, __func__);
+#endif // AL_LOG_OFF
 
+#ifdef AL_TODO_OFF
+#define AL_db_todo(msg) ((void)0)
+#else
 // rust-like formatted todo message that aborts the program if reached
 #define AL_db_todo(msg)                                                        \
   do {                                                                         \
     _al_db_msg("TODO", (msg), __FILE_NAME__, __LINE__, __func__);              \
     abort();                                                                   \
   } while (0)
-
-#endif // AL_DEBUG_OFF
+#endif // AL_LOG_OFF
 
 // compare two integers or doubles and return the smaller one
 #define AL_cmp_min(a, b)                                                       \
