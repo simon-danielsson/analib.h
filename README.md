@@ -37,7 +37,7 @@ Inspiration has been taken from the following projects:
 
 ## Usage
   
-This library uses gnu extensions. Be sure to add the appropriate compiler flag:  
+This library uses gnu extensions, so be sure to add the appropriate compiler flag (only used for variadic arguments in log/todo debug functions):  
 ``` bash
 -Wno-gnu-zero-variadic-macro-arguments
 ```
