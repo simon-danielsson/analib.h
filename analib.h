@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.1.7
+Version     : 0.1.8
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -49,7 +49,6 @@ SOFTWARE.
 
 typedef struct {
   char *msg_col;
-  char *rst_col;
   int line;
   const char *function;
   const char *file;
@@ -75,6 +74,7 @@ static inline void al_db_lbl(const char *label, char *header, int header_size) {
   snprintf(header, header_size, " %s %s", label, wing);
 }
 
+#define _al_reset_clr "\033[0m"
 // generic msg call for debug functions
 static inline void _al_db_msg(_al_db_type *t) {
   char label[9];
@@ -85,7 +85,7 @@ static inline void _al_db_msg(_al_db_type *t) {
   space[11] = '\0';
 
   fprintf(stderr, "%s%-8s%s%s:%d (%s)%-2s%-32s\n", t->msg_col, t->type,
-          t->rst_col, t->file, t->line, t->function, " ", t->msg);
+          _al_reset_clr, t->file, t->line, t->function, " ", t->msg);
 }
 
 static inline int _al_min_int(int a, int b) { return a < b ? a : b; }
@@ -106,7 +106,6 @@ ANALIB_DEF int AL_str_len(char *s);
 #define _al_log_clr "\033[34m"
 #define _al_assert_clr "\033[31m"
 #define _al_todo_clr "\033[33m"
-#define _al_reset_clr "\033[0m"
 
 #ifdef AL_ASSERT_OFF
 #define AL_db_assert(cond, do_abort) ((void)0)
@@ -123,7 +122,6 @@ ANALIB_DEF int AL_str_len(char *s);
       snprintf(msg, sizeof(msg), "success -> %s", #cond);                      \
     }                                                                          \
     _al_db_msg(&(_al_db_type){.msg_col = _al_assert_clr,                       \
-                              .rst_col = _al_reset_clr,                        \
                               .line = __LINE__,                                \
                               .function = __func__,                            \
                               .file = __FILE_NAME__,                           \
@@ -141,7 +139,6 @@ ANALIB_DEF int AL_str_len(char *s);
 // formatted log message
 #define AL_db_log(message)                                                     \
   _al_db_msg(&(_al_db_type){.msg_col = _al_log_clr,                            \
-                            .rst_col = _al_reset_clr,                          \
                             .line = __LINE__,                                  \
                             .function = __func__,                              \
                             .file = __FILE_NAME__,                             \
@@ -157,7 +154,6 @@ ANALIB_DEF int AL_str_len(char *s);
 #define AL_db_todo(message)                                                    \
   do {                                                                         \
     _al_db_msg(&(_al_db_type){.msg_col = _al_todo_clr,                         \
-                              .rst_col = _al_reset_clr,                        \
                               .line = __LINE__,                                \
                               .function = __func__,                            \
                               .file = __FILE_NAME__,                           \
