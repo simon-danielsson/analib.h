@@ -22,7 +22,7 @@ int main(void) {
     test1();
     test2();
     test3();
-    AL_log("Finished with tests!");
+    AL_log("Finished with tests %d, %d and %d.", 1, 2, 3);
     int tests_left_to_add = 3;
     AL_todo("add %d more tests", tests_left_to_add);
     return 0;

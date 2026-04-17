@@ -44,6 +44,8 @@ Copy [analib.h](./analib.h) into your project and include it like this:
 #include "./analib.h"
 ```
   
+Feel free to use [test.c](./tests/test.c) as a makeshift quick-start guide.
+  
 ---
 <div id="license"></div>
 
