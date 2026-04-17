@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name        : Analib
-Version     : 0.1.8
+Version     : 0.1.9
 
 Author      : Simon Danielsson
 Email       : contact@simondanielsson.se
@@ -134,31 +134,38 @@ ANALIB_DEF int AL_str_len(char *s);
 #endif // AL_ASSERT_OFF
 
 #ifdef AL_LOG_OFF
-#define AL_db_log(msg) ((void)0)
+#define AL_db_log(fmt, ...) ((void)0)
 #else
 // formatted log message
-#define AL_db_log(message)                                                     \
-  _al_db_msg(&(_al_db_type){.msg_col = _al_log_clr,                            \
-                            .line = __LINE__,                                  \
-                            .function = __func__,                              \
-                            .file = __FILE_NAME__,                             \
-                            .type = "LOG",                                     \
-                            .msg = (message)});
+#define AL_db_log(fmt, ...)                                                    \
+  do {                                                                         \
+    char msg[64];                                                              \
+    snprintf(msg, sizeof(msg), fmt, ##__VA_ARGS__);                            \
+    _al_db_msg(&(_al_db_type){.msg_col = _al_log_clr,                          \
+                              .line = __LINE__,                                \
+                              .function = __func__,                            \
+                              .file = __FILE_NAME__,                           \
+                              .type = "LOG",                                   \
+                              .msg = msg});                                    \
+  } while (0)
 
 #endif // AL_LOG_OFF
 
 #ifdef AL_TODO_OFF
-#define AL_db_todo(msg) ((void)0)
+#define AL_db_todo(fmt, ...) ((void)0)
 #else
 // rust-like formatted todo message that aborts the program if reached
-#define AL_db_todo(message)                                                    \
+
+#define AL_db_todo(fmt, ...)                                                   \
   do {                                                                         \
+    char msg[64];                                                              \
+    snprintf(msg, sizeof(msg), fmt, ##__VA_ARGS__);                            \
     _al_db_msg(&(_al_db_type){.msg_col = _al_todo_clr,                         \
                               .line = __LINE__,                                \
                               .function = __func__,                            \
                               .file = __FILE_NAME__,                           \
                               .type = "TODO",                                  \
-                              .msg = (message)});                              \
+                              .msg = msg});                                    \
     abort();                                                                   \
   } while (0)
 #endif // AL_LOG_OFF

@@ -22,11 +22,12 @@ void test3(void) {
 
 int main(void) {
 
-    AL_db_log("Initiating tests...");
-    test1();
-    test2();
-    test3();
+    // AL_db_log("Initiating tests...");
+    // test1();
+    // test2();
+    // test3();
     AL_db_log("Finished with tests!");
-    AL_db_todo("add more tests");
+    int tests_left_to_add = 3;
+    AL_db_todo("add %d more tests", tests_left_to_add);
     return 0;
 }

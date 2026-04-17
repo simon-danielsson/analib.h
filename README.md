@@ -37,6 +37,11 @@ Inspiration has been taken from the following projects:
 
 ## Usage
   
+This library uses gnu extensions. Be sure to add the appropriate compiler flag:  
+``` bash
+-Wno-gnu-zero-variadic-macro-arguments
+```
+  
 Copy [analib.h](./analib.h) into your project and include it like this:  
   
 ```c
