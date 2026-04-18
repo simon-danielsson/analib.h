@@ -23,7 +23,10 @@ int main(void) {
     test2();
     test3();
     AL_log("Finished with tests %d, %d and %d.", 1, 2, 3);
-    int tests_left_to_add = 3;
-    AL_todo("add %d more tests", tests_left_to_add);
+    {
+        int tests_left[] = {3, 2, 1};
+        int n = *(&tests_left + 1) - tests_left;
+        AL_todo("add %d more tests", AL_int_arr_sum(tests_left, n));
+    }
     return 0;
 }

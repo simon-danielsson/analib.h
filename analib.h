@@ -104,6 +104,9 @@ static inline double _al_max_double(double a, double b) {
 // get length of str
 ANALIB_DEF int AL_str_len(char *s);
 
+// sum int array recursively
+ANALIB_DEF int AL_int_arr_sum(int arr[], int n);
+
 #define _al_log_clr "\033[34m"
 #define _al_assert_clr "\033[31m"
 #define _al_assert_succ_clr "\033[32m"
@@ -182,6 +185,12 @@ ANALIB_DEF int AL_str_len(char *s) {
   for (t = s; *t != '\0'; t++)
     ;
   return t - s;
+}
+
+ANALIB_DEF int AL_int_arr_sum(int arr[], int n) {
+  if (n == 0)
+    return 0;
+  return arr[n - 1] + AL_int_arr_sum(arr, n - 1);
 }
 
 #endif // ANALIB_IMPLEMENTATION
