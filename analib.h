@@ -2,7 +2,7 @@
 
 -------------- Details --------------
 Name     : Analib
-Version  : 0.2.5
+Version  : 0.2.6
 Repo     : https://github.com/simon-danielsson/analib.h
 
 Author   : Simon Danielsson
@@ -35,6 +35,7 @@ SOFTWARE.
 #ifndef ANALIB_H_
 #define ANALIB_H_
 
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -100,6 +101,27 @@ static inline double _al_max_double(double a, double b) {
 
 // PUBLIC API
 // =============================================================================
+
+// checks if the input str contains nothing
+bool is_empty_or_whitespace(const char *str);
+
+// remove special characters form str in place
+void rem_spec_chars(char *str);
+
+// checks if param *str contains param *word
+bool contains(const char *str, const char *word);
+
+// checks if param *str starts with param *word
+bool starts_with(const char *str, const char *word);
+
+// helper for duplicating strings
+char *strdup(const char *s);
+
+// param: input array of *char
+// param: n count of array
+// param: delimiter between each line
+// returns a single concatenated string
+char *join_lines(char **lines, int n, char *delim);
 
 #define _al_log_clr "\033[34m"
 #define _al_assert_clr "\033[31m"
@@ -183,4 +205,91 @@ static inline double _al_max_double(double a, double b) {
 
 #ifdef ANALIB_IMPLEMENTATION
 
+// checks if the input str contains nothing
+bool is_empty_or_whitespace(const char *str) {
+  if (str == NULL)
+    return true;
+  while (*str) {
+    if (!isspace((unsigned char)*str)) {
+      return false;
+    }
+    str++;
+  }
+  return true;
+}
+
+// remove special characters form str in place
+void rem_spec_chars(char *str) {
+  char *dst = str;
+
+  while (*str) {
+    if (isalnum((unsigned char)*str) || *str == '_') {
+      *dst++ = *str;
+    }
+    str++;
+  }
+
+  *dst = '\0';
+}
+
+// checks if param *str contains param *word
+bool contains(const char *str, const char *word) {
+  return strstr(str, word) != NULL;
+}
+
+// checks if param *str starts with param *word
+bool starts_with(const char *str, const char *word) {
+  size_t len_str = strlen(str);
+  size_t len_word = strlen(word);
+
+  if (len_word > len_str)
+    return false;
+  return strncmp(str, word, len_word) == 0;
+}
+
+// helper for duplicating strings
+char *strdup(const char *s) {
+  if (!s)
+    return NULL;
+  char *out = malloc(strlen(s) + 1);
+  if (!out) {
+    ERROR("Memory allocation failed");
+    return NULL;
+  }
+  strcpy(out, s);
+  return out;
+}
+
+// param: input array of *char
+// param: n count of array
+// param: delimiter between each line
+// returns a single concatenated string
+char *join_lines(char **lines, int n, char *delim) {
+  size_t total = 1; // for '\0'
+
+  for (int i = 0; i < n; i++) {
+    if (lines[i]) {
+      total += (strlen(lines[i]) + strlen(delim));
+    }
+  }
+
+  char *out = malloc(total);
+  if (!out) {
+    ERROR("Memory allocation failed");
+    return NULL;
+  }
+
+  out[0] = '\0';
+
+  for (int i = 0; i < n; i++) {
+    if (lines[i]) {
+      strcat(out, lines[i]);
+      strcat(out, delim);
+      lines[i] = NULL;
+      free(lines[i]);
+    }
+  }
+
+  return out;
+}
 #endif // ANALIB_IMPLEMENTATION
