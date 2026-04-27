@@ -111,7 +111,7 @@ bool contains(const char *str, const char *word);
 bool starts_with(const char *str, const char *word);
 
 // helper for duplicating strings
-char *strdup(const char *s);
+char *al_strdup(const char *s);
 
 // param: input array of *char
 // param: n count of array
@@ -244,7 +244,7 @@ bool starts_with(const char *str, const char *word) {
 }
 
 // helper for duplicating strings
-char *strdup(const char *s) {
+char *al_strdup(const char *s) {
   if (!s)
     return NULL;
   char *out = malloc(strlen(s) + 1);
