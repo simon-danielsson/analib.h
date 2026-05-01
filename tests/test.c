@@ -1,6 +1,6 @@
 #include <stdio.h>
 #define ANALIB_IMPLEMENTATION
-#include "../analib.h"
+#include "../ana.h"
 
 int sum(int x, int y) { return x + y; }
 

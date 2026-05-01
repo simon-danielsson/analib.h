@@ -1,13 +1,6 @@
 /*
-
--------------- Details --------------
-Name     : Analib
-Version  : 0.2.7
-Repo     : https://github.com/simon-danielsson/analib.h
-
-Author   : Simon Danielsson
-Email    : contact@simondanielsson.se
-Website  : https://www.simondanielsson.se/
+ana.h v0.2.8
+https://github.com/simon-danielsson/analib.h
 
 ------------ MIT License ------------
 Copyright © 2026 Simon Danielsson
