@@ -1,5 +1,5 @@
 /*
-ana.h v0.3.0
+ana.h v0.3.1
 https://github.com/simon-danielsson/analib.h
 
 ------------ MIT License ------------
