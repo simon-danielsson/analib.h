@@ -1,5 +1,5 @@
 /*
-ana.h v0.3.1
+ana.h v0.4.2
 https://github.com/simon-danielsson/analib.h
 
 ------------ MIT License ------------
@@ -37,10 +37,6 @@ SOFTWARE.
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-#if defined(__APPLE__)
-#include <mach-o/dyld.h>
-#endif
 
 #ifndef ANALIB_DEF
 #define ANALIB_DEF
@@ -116,9 +112,6 @@ char *al_strdup(const char *s);
 
 // joins lines with delimiter
 char *al_join_lines(char **lines, int n, char *delim);
-
-// get dir of the current binary (experimental)
-char *al_get_executable_dir(void);
 
 // returns true if input is a valid path
 bool al_is_valid_path(const char *s);
@@ -298,72 +291,6 @@ char *al_join_lines(char **lines, int n, char *delim) {
   }
 
   return out;
-}
-
-/// get dir of the current binary (experimental)
-char *al_get_executable_dir(void) {
-  char path[PATH_MAX];
-
-#if defined(__linux__)
-  ssize_t n = readlink("/proc/self/exe", path, sizeof(path) - 1);
-  if (n < 0 || n >= (ssize_t)sizeof(path))
-    return NULL;
-
-  path[n] = '\0';
-
-#elif defined(__APPLE__)
-  uint32_t size = sizeof(path);
-
-  if (_NSGetExecutablePath(path, &size) != 0) {
-    // PATH_MAX was too small; handle dynamically
-    char *tmp = malloc(size);
-    if (!tmp)
-      return NULL;
-
-    if (_NSGetExecutablePath(tmp, &size) != 0) {
-      free(tmp);
-      return NULL;
-    }
-
-    char *resolved = realpath(tmp, NULL);
-    free(tmp);
-
-    if (!resolved)
-      return NULL;
-
-    char *slash = strrchr(resolved, '/');
-    if (!slash) {
-      free(resolved);
-      return NULL;
-    }
-
-    *slash = '\0';
-    return resolved; // caller must free
-  }
-
-  char *resolved = realpath(path, NULL);
-  if (!resolved)
-    return NULL;
-
-  char *slash = strrchr(resolved, '/');
-  if (!slash) {
-    free(resolved);
-    return NULL;
-  }
-
-  *slash = '\0';
-  return resolved; // caller must free
-
-#else
-  return NULL;
-#endif
-
-  char *slash = strrchr(path, '/');
-  if (!slash)
-    return NULL;
-
-  *slash = '\0';
-  return al_strdup(path); // caller must free
 }
 
 /// returns true if input is a valid path
