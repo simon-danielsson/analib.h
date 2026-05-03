@@ -1,4 +1,4 @@
-//! ana.h v0.4.4
+//! ana.h v0.4.5
 //!
 //! https://github.com/simon-danielsson/analib.h
 
@@ -106,8 +106,11 @@ bool al_contains(const char *str, const char *word);
 // checks if param *str starts with param *word
 bool al_starts_with(const char *str, const char *word);
 
-/// checks if *str starts *word, ignoring leading whitespace
+// checks if *str starts *word, ignoring leading whitespace
 bool al_starts_with_no_w(const char *line, const char *word);
+
+// strip start and end of str
+char *al_strip_start_end(char *s);
 
 // helper for duplicating strings
 char *al_strdup(const char *s);
@@ -124,7 +127,7 @@ char *al_strip_path(char *file_name);
 // converts characters of input string to uppercase
 char *al_str_to_upper(const char *str);
 
-/// remove first n characters from string with memmove
+// remove first n characters from string with memmove
 void al_remove_first_n(char *c, int n);
 
 #define _al_log_clr "\033[34m"
@@ -352,6 +355,25 @@ char *al_strip_path(char *file_name) {
     }
   }
   return al_strdup(output);
+}
+
+/// strip start and end of str
+char *al_strip_start_end(char *s) {
+  char op[strlen(s)];
+  op[0] = '\0';
+  while (*s && isspace((unsigned char)*s)) {
+    s++;
+  }
+  int len = strlen(s);
+  while (true) {
+    len--;
+    if (!isspace((unsigned char)s[len])) {
+      printf("%c\n", s[len]);
+      break;
+    }
+  }
+  strncat(op, s, len + 1);
+  return al_strdup(op);
 }
 
 /// remove first n characters from string with memmove
